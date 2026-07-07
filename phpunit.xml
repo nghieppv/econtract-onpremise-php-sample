@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true">
+    <testsuites>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:9Xdn8QYH5P7Tk7vFJ9bSgN4TDK7hgV1jUR0YQ5Lh+F8="/>
+        <env name="DOCHUB_BASE_URL" value="https://dochub.test"/>
+        <env name="DOCHUB_USERNAME" value="sample_user"/>
+        <env name="DOCHUB_PASSWORD" value="sample_password"/>
+    </php>
+</phpunit>
