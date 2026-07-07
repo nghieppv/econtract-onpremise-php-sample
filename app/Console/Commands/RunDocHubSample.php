@@ -12,10 +12,10 @@ use Illuminate\Support\Str;
 class RunDocHubSample extends Command
 {
     protected $signature = 'dochub:sample
-        {--batch : Tao lo chung tu tu document template truoc khi chay flow PDF}
-        {--send-batch : Gui quy trinh cho lo chung tu sau khi tao batch import}
-        {--otp= : OTP dung chung khi API yeu cau xac nhan OTP}
-        {--skip-process : Chi tao/cap nhat/gui quy trinh, khong xu ly approve/sign}';
+        {--batch : Create documents from a template by batch import before running the PDF flow}
+        {--send-batch : Send the batch workflow after creating the batch import}
+        {--otp= : OTP value used when the API requires OTP confirmation}
+        {--skip-process : Create, update, and send the workflow without approve/sign processing}';
 
     protected $description = 'Run eContract On-Premise sample business flow';
 
@@ -34,8 +34,8 @@ class RunDocHubSample extends Command
         $this->info('[2.1] Create document from PDF');
         $create = $docHub->createDocument([
             'no' => $random,
-            'subject' => "Chung tu thu nghiem {$random}",
-            'description' => 'Chung tu thu nghiem',
+            'subject' => "Sample document {$random}",
+            'description' => 'Sample document',
             'type_id' => (int) config('dochub.document.type_id'),
             'department_id' => (int) config('dochub.document.department_id'),
             'file_path' => (string) config('dochub.document.file_path'),
@@ -106,7 +106,7 @@ class RunDocHubSample extends Command
             return;
         }
 
-        $otp = $this->option('otp') ?: $this->ask('Nhap OTP de xac nhan '.ReceiveOtpMethod::labelFrom((int) $otpMethod));
+        $otp = $this->option('otp') ?: $this->ask('Enter OTP to confirm '.ReceiveOtpMethod::labelFrom((int) $otpMethod));
         $payload['otp'] = $otp;
 
         $confirmed = $docHub->processDocument($payload);
@@ -142,7 +142,7 @@ class RunDocHubSample extends Command
         return [
             'processId' => $processId,
             'otp' => null,
-            'reason' => 'Dong y',
+            'reason' => 'Approved',
             'reject' => false,
             'signatureDisplayMode' => 3,
             'signatureImage' => $this->signatureImage(),
@@ -172,7 +172,7 @@ class RunDocHubSample extends Command
                 "{$prefix}{$i}",
                 "Hop dong {$prefix}{$i}",
                 '',
-                'Chung tu thu nghiem',
+                'Sample document',
                 'Y',
                 (string) config('dochub.batch_import.user_code'),
                 'DR',

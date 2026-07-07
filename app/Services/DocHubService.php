@@ -24,7 +24,7 @@ class DocHubService
         ];
 
         if ($payload['username'] === null || $payload['password'] === null || $this->baseUrl === '') {
-            throw new RuntimeException('Thieu thong tin dang nhap DocHub. Vui long cau hinh DOCHUB_BASE_URL, DOCHUB_USERNAME, DOCHUB_PASSWORD.');
+            throw new RuntimeException('Missing DocHub login information. Please configure DOCHUB_BASE_URL, DOCHUB_USERNAME, and DOCHUB_PASSWORD.');
         }
 
         $result = $this->post('/api/auth/password-login', $payload, authenticated: false);
@@ -42,7 +42,7 @@ class DocHubService
         $fileName = (string) Arr::get($document, 'file_name', basename($filePath));
 
         if (! is_file($filePath)) {
-            throw new RuntimeException("Khong tim thay file chung tu: {$filePath}");
+            throw new RuntimeException("Document file not found: {$filePath}");
         }
 
         return $this->request()
@@ -63,7 +63,7 @@ class DocHubService
         $binary = base64_decode($base64File, strict: true);
 
         if ($binary === false) {
-            throw new RuntimeException('File base64 khong hop le.');
+            throw new RuntimeException('Invalid base64 file content.');
         }
 
         return $this->request()
@@ -146,7 +146,7 @@ class DocHubService
                 ->json();
         } catch (RequestException $exception) {
             $message = $exception->response?->body() ?: $exception->getMessage();
-            throw new RuntimeException("DocHub API loi tai {$path}: {$message}", previous: $exception);
+            throw new RuntimeException("DocHub API error at {$path}: {$message}", previous: $exception);
         }
     }
 
@@ -159,7 +159,7 @@ class DocHubService
 
         if ($authenticated) {
             if ($this->accessToken === null) {
-                throw new RuntimeException('Chua authenticate DocHub. Hay goi authenticate() truoc.');
+                throw new RuntimeException('DocHub is not authenticated. Call authenticate() first.');
             }
 
             $request = $request->withToken($this->accessToken);

@@ -13,12 +13,12 @@ enum ReceiveOtpMethod: int
         return match ($this) {
             self::Email => 'Email',
             self::Sms => 'Sms',
-            self::None => 'Khong co',
+            self::None => 'None',
         };
     }
 
     public static function labelFrom(?int $code): string
     {
-        return self::tryFrom((int) $code)?->label() ?? "Khong xac dinh ({$code})";
+        return self::tryFrom((int) $code)?->label() ?? "Unknown ({$code})";
     }
 }

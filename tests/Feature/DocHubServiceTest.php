@@ -14,12 +14,12 @@ class DocHubServiceTest extends TestCase
         Http::fake([
             'https://dochub.test/api/auth/password-login' => Http::response([
                 'success' => true,
-                'messages' => ['Dang nhap thanh cong'],
+                'messages' => ['Login successful'],
                 'data' => 'access-token',
             ]),
             'https://dochub.test/api/documents/update-process' => Http::response([
                 'success' => true,
-                'messages' => ['Cap nhat quy trinh thanh cong'],
+                'messages' => ['Workflow updated successfully'],
                 'data' => ['id' => 'doc-1'],
             ]),
         ]);
@@ -66,8 +66,8 @@ class DocHubServiceTest extends TestCase
 
         $created = $service->createDocument([
             'no' => 'ABCD',
-            'subject' => 'Chung tu thu nghiem ABCD',
-            'description' => 'Chung tu thu nghiem',
+            'subject' => 'Sample document ABCD',
+            'description' => 'Sample document',
             'type_id' => 54,
             'department_id' => 33,
         ], base_path('storage/app/samples/sample.pdf'));

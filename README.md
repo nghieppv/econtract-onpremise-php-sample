@@ -1,21 +1,21 @@
 # eContract On-Premise Laravel Sample
 
-Sample Laravel port tu repo .NET, dung cho Dev team tham khao khi tich hop eContract On-Premise.
+Laravel sample ported from the .NET repository for development teams integrating with eContract On-Premise.
 
-## Nghiep Vu Bao Phu
+## Covered Business Flows
 
-1. Xac thuc tai khoan va chon cong ty de lay access token.
-2. Tao chung tu tu file PDF bang multipart upload.
-3. Tao chung tu hang loat tu document template bang batch import.
-4. Cap nhat quy trinh xu ly chung tu.
-5. Gui quy trinh xu ly chung tu.
-6. Lay danh sach chung tu va waiting process.
-7. Xu ly chung tu theo quy trinh: Approve, SignDraw, ESign.
-8. Xac nhan OTP khi API tra ve `receiveOtpMethod` khac `-1`.
-9. Gui thong bao chung tu hoan tat.
-10. Lay lai danh sach chung tu de kiem tra trang thai.
+1. Authenticate and select a company to retrieve an access token.
+2. Create a document from a PDF file using multipart upload.
+3. Create documents in bulk from a document template using batch import.
+4. Update the document processing workflow.
+5. Send the document processing workflow.
+6. Retrieve the document list and the current waiting process.
+7. Process documents through the workflow: Approve, SignDraw, and ESign.
+8. Confirm OTP when the API returns a `receiveOtpMethod` other than `-1`.
+9. Send a notification when document processing is completed.
+10. Retrieve the document list again to verify the final status.
 
-## Cai Dat
+## Installation
 
 ```bash
 composer install
@@ -23,7 +23,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Cap nhat cac bien trong `.env`:
+Update these variables in `.env`:
 
 ```dotenv
 DOCHUB_BASE_URL=https://your-base-api-url
@@ -35,39 +35,39 @@ DOCHUB_DEPARTMENT_ID=33
 DOCHUB_PROCESS_USER_CODE=BAOTH
 ```
 
-File PDF mau nam tai `storage/app/samples/sample.pdf`. Neu dung file khac, cap nhat `DOCHUB_DOCUMENT_FILE`.
+The sample PDF file is located at `storage/app/samples/sample.pdf`. If you use another file, update `DOCHUB_DOCUMENT_FILE`.
 
-## Chay Full Flow PDF
+## Run The Full PDF Flow
 
 ```bash
 php artisan dochub:sample
 ```
 
-Neu moi truong yeu cau OTP, command se hoi OTP tren console. Co the truyen san OTP:
+If the environment requires OTP, the command prompts for it in the console. You can also pass the OTP directly:
 
 ```bash
 php artisan dochub:sample --otp=123456
 ```
 
-Chi tao chung tu, cap nhat quy trinh va gui quy trinh, khong xu ly approve/sign:
+Create the document, update the workflow, and send the workflow without approve/sign processing:
 
 ```bash
 php artisan dochub:sample --skip-process
 ```
 
-## Chay Batch Import Tu Template
+## Run Batch Import From Template
 
 ```bash
 php artisan dochub:sample --batch
 ```
 
-Tao batch va gui luon quy trinh cho batch:
+Create the batch and send the batch workflow immediately:
 
 ```bash
 php artisan dochub:sample --batch --send-batch
 ```
 
-Can cau hinh them:
+Additional required configuration:
 
 ```dotenv
 DOCHUB_TEMPLATE_ID=1141
@@ -77,19 +77,19 @@ DOCHUB_BATCH_USER_CODE=baoth
 DOCHUB_BATCH_ROWS=2
 ```
 
-## File Chinh
+## Main Files
 
 - `app/Services/DocHubService.php`: wrapper endpoint DocHub/eContract On-Premise.
-- `app/Console/Commands/RunDocHubSample.php`: flow nghiep vu end-to-end tu .NET sample.
-- `app/Support/DocHubPlaceholders.php`: placeholder bat buoc khi import theo lo.
-- `config/dochub.php`: mapping `.env` cho thong tin tich hop.
-- `tests/Feature/DocHubServiceTest.php`: test payload va endpoint service bang `Http::fake`.
-- `tests/Feature/RunDocHubSampleCommandTest.php`: test command full flow khong can server that.
+- `app/Console/Commands/RunDocHubSample.php`: end-to-end business flow ported from the .NET sample.
+- `app/Support/DocHubPlaceholders.php`: required placeholders for batch import.
+- `config/dochub.php`: `.env` mapping for integration settings.
+- `tests/Feature/DocHubServiceTest.php`: service endpoint and payload tests using `Http::fake`.
+- `tests/Feature/RunDocHubSampleCommandTest.php`: full-flow command test without a real server.
 
-## Chay Test
+## Run Tests
 
 ```bash
 php artisan test
 ```
 
-Test hien tai fake tat ca HTTP request, nen dung de kiem tra code tao dung endpoint, header bearer token va payload truoc khi ket noi moi truong On-Premise that.
+The tests fake all HTTP requests, so they are useful for verifying endpoints, bearer token headers, and payloads before connecting to a real On-Premise environment.
